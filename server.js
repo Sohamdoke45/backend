@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import jwt from "jsonwebtoken";
 import studentRoutes from "./routes/studentRoutes.js";
 import Student from "./models/Student.js";
+import ensureAdminExists from "./createAdmin.js";
 
 
 
@@ -38,7 +39,10 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("✅ MongoDB connected"))
+  .then(() => {
+    console.log("✅ MongoDB connected");
+    ensureAdminExists();
+  })
   .catch((err) => console.error("❌ MongoDB error:", err));
 
 

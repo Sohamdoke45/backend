@@ -1,23 +1,20 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import User from "./models/User.js";
+import User from "../models/User.js";
 
 const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/school";
-const username = "Soham"; // change as needed
-const password = "1234"; // change as needed
+const username = "Soham";
+const password = "1234";
 
-async function ensureAdminExists() {
+export default async function handler(req, res) {
   await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
   const existing = await User.findOne({ username });
   if (!existing) {
     const hashedPassword = await bcrypt.hash(password, 10);
     await User.create({ username, password: hashedPassword });
-    console.log("Admin created successfully");
+    res.status(201).json({ message: "Admin created successfully" });
   } else {
-    console.log("Admin already exists");
+    res.status(200).json({ message: "Admin already exists" });
   }
-  mongoose.disconnect();
+  await mongoose.disconnect();
 }
-
-// Call this function from your server.js when the server starts
-export default ensureAdminExists;
